@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distributed Task Queue - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">DTQ</div>
+          <div class="logo-text">
+            <h1>Distributed Task Queue</h1>
+            <p>Real-time Monitoring Dashboard</p>
+          </div>
+        </div>
+        <div class="connection-status" id="connectionStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">Connecting...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Stats Overview -->
+      <section class="stats-grid">
+        <div class="stat-card total">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="totalTasks">0</span>
+            <span class="stat-label">Total Tasks</span>
+          </div>
+        </div>
+
+        <div class="stat-card pending">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="pendingTasks">0</span>
+            <span class="stat-label">Pending</span>
+          </div>
+        </div>
+
+        <div class="stat-card processing">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="processingTasks">0</span>
+            <span class="stat-label">Processing</span>
+          </div>
+        </div>
+
+        <div class="stat-card completed">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <path d="M22 4L12 14.01l-3-3"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="completedTasks">0</span>
+            <span class="stat-label">Completed</span>
+          </div>
+        </div>
+
+        <div class="stat-card failed">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M15 9l-6 6M9 9l6 6"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="failedTasks">0</span>
+            <span class="stat-label">Failed</span>
+          </div>
+        </div>
+
+        <div class="stat-card time">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="avgProcessingTime">0ms</span>
+            <span class="stat-label">Avg. Time</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Two Column Layout -->
+      <div class="content-grid">
+        <!-- Left Column -->
+        <div class="content-left">
+          <!-- Queue Status -->
+          <section class="card queue-card">
+            <div class="card-header">
+              <h2>Queue Status</h2>
+              <span class="badge" id="queueHealth">Healthy</span>
+            </div>
+            <div class="queue-bars">
+              <div class="queue-item">
+                <div class="queue-label">
+                  <span class="priority-dot high"></span>
+                  <span>High Priority</span>
+                </div>
+                <div class="queue-bar-wrapper">
+                  <div class="queue-bar">
+                    <div class="queue-fill high" id="highQueueBar"></div>
+                  </div>
+                  <span class="queue-count" id="highQueueCount">0</span>
+                </div>
+              </div>
+              <div class="queue-item">
+                <div class="queue-label">
+                  <span class="priority-dot normal"></span>
+                  <span>Normal Priority</span>
+                </div>
+                <div class="queue-bar-wrapper">
+                  <div class="queue-bar">
+                    <div class="queue-fill normal" id="normalQueueBar"></div>
+                  </div>
+                  <span class="queue-count" id="normalQueueCount">0</span>
+                </div>
+              </div>
+              <div class="queue-item">
+                <div class="queue-label">
+                  <span class="priority-dot low"></span>
+                  <span>Low Priority</span>
+                </div>
+                <div class="queue-bar-wrapper">
+                  <div class="queue-bar">
+                    <div class="queue-fill low" id="lowQueueBar"></div>
+                  </div>
+                  <span class="queue-count" id="lowQueueCount">0</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Workers -->
+          <section class="card workers-card">
+            <div class="card-header">
+              <h2>Worker Pool</h2>
+              <span class="worker-count" id="workerCount">0 workers</span>
+            </div>
+            <div class="workers-grid" id="workersGrid">
+              <div class="no-workers">No active workers</div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column -->
+        <div class="content-right">
+          <!-- Create Task -->
+          <section class="card create-card">
+            <div class="card-header">
+              <h2>Create Tasks</h2>
+            </div>
+            <div class="create-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="taskType">Task Type</label>
+                  <select id="taskType">
+                    <option value="email">Email</option>
+                    <option value="image-processing">Image Processing</option>
+                    <option value="data-analysis">Data Analysis</option>
+                    <option value="report-generation">Report Generation</option>
+                    <option value="notification">Notification</option>
+                    <option value="computation">Computation</option>
+                    <option value="default">Default</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="taskPriority">Priority</label>
+                  <select id="taskPriority">
+                    <option value="high">High</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="taskCount">Count</label>
+                  <input type="number" id="taskCount" value="1" min="1" max="100">
+                </div>
+                <div class="form-group buttons">
+                  <button class="btn btn-primary" id="submitTasks">Submit</button>
+                  <button class="btn btn-danger" id="clearAll">Clear All</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Live Events -->
+          <section class="card events-card">
+            <div class="card-header">
+              <h2>Live Events</h2>
+              <button class="btn-icon" id="clearEvents" title="Clear events">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                </svg>
+              </button>
+            </div>
+            <div class="events-list" id="eventsList">
+              <div class="event-item info">
+                <span class="event-message">Waiting for events...</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Distributed Task Queue System - Parallel & Distributed Computing Project</p>
+      <p>M. Arslan, Hamza Ehsan Butt, Talha Adalat &copy; 2024</p>
+    </footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

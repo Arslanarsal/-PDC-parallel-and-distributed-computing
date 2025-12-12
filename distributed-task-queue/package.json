@@ -1,0 +1,47 @@
+{
+  "name": "distributed-task-queue",
+  "version": "1.0.0",
+  "description": "A Scalable Job Processing Architecture using Node.js & TypeScript - Parallel & Distributed Computing Project",
+  "main": "dist/index.js",
+  "scripts": {
+    "demo": "ts-node src/demo.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "start:api": "ts-node src/api/server.ts",
+    "start:workers": "ts-node src/workers/cluster.ts",
+    "start:all": "concurrently \"npm run start:api\" \"npm run start:workers\"",
+    "test:load": "ts-node src/utils/loadTest.ts",
+    "clean": "rm -rf dist",
+    "build:start": "npm run build && npm start"
+  },
+  "keywords": [
+    "distributed-systems",
+    "task-queue",
+    "nodejs",
+    "typescript",
+    "redis",
+    "parallel-computing",
+    "worker-pool"
+  ],
+  "author": "M. Arslan, Hamza Ehsan Butt, Talha Adalat",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.1",
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "@types/uuid": "^9.0.7",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.2"
+  }
+}
